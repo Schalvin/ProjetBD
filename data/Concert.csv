@@ -1,4 +1,4 @@
-ID_Concert,Nom,Date,Prix,Nbr_places,Cause,BesoinVolontaires,Espaces exterieurs,Enfants,ID_Lieu
+ID_Concert,Nom,Date,Prix,Nbr_places,Cause,BesoinVolontaires,EspacesExterieurs,Enfants,ID_Lieu
 1,Rockin' Rhythms Concert,13/05/2024,22,100,Education support,23,true,true,1
 2,Harmony Fest,08/06/2024,21,100,,56,true,false,2
 3,Jazz Jam Session,24/02/2024,-3,100,,,false,false,3
