@@ -1,5 +1,8 @@
-DROP TABLE TypeUtilisateur;
-DROP TABLE Utilisateurs;
+DROP TABLE Concert CASCADE;
+DROP TABLE Lieu CASCADE;
+DROP TABLE Groupe CASCADE;
+DROP TABLE TypeUtilisateur CASCADE;
+DROP TABLE Utilisateurs CASCADE;
 
 
 CREATE TABLE TypeUtilisateur(
@@ -7,7 +10,7 @@ CREATE TABLE TypeUtilisateur(
     Libelle varchar(30)
 );
 
-CREATE TABLE Utilisateurs (
+CREATE TABLE Utilisateurs(
     ID_Utilisateur integer PRIMARY KEY,
     Prenom varchar(30) NOT NULL,
     Nom_famille varchar(30) NOT NULL,
@@ -25,13 +28,13 @@ CREATE TABLE Lieu (
     Nom varchar(30) NOT NULL,
     Adresse varchar(100),
     Ville varchar(30) NOT NULL,
-    Pays varchar(30) NOT NULL,
+    Pays varchar(30) NOT NULL
 );
 
 CREATE TABLE Groupe(
     ID_Groupe integer PRIMARY KEY,
     Nom varchar(30) NOT NULL,
-    Descript varchar(200),
+    Descript varchar(200)
 );
 
 CREATE TABLE Concert(
@@ -44,5 +47,6 @@ CREATE TABLE Concert(
     BesoinVolontaires integer,
     EspacesExterieurs BOOLEAN,
     Enfants BOOLEAN,
-    ID_Lieu FOREIGN KEY REFERENCES Lieu(ID_Lieu)
+    ID_Lieu integer, 
+    FOREIGN KEY (ID_Lieu) REFERENCES Lieu(ID_Lieu)
 );
