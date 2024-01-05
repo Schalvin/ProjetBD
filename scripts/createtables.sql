@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS TypeUtilisateur, Utilisateur, 
 Lieu, Genre, Groupe, Album, Morceau, Playlist, Concert, LineUp, 
-Tag, Avis, Amis, Follows, Organisateur, Participant, Interesse, ContenuAlbum, ContenuPlaylist,
+Tag, Avis, Amis, Follows, Organisateur, ParticipantInteresse, ContenuAlbum, ContenuPlaylist,
 ArtisteAlbum, GroupeTag, MorceauTag, PlaylistTag, ConcertTag, LieuTag,
 GroupeGenre, MorceauGenre CASCADE;
 
@@ -14,10 +14,10 @@ CREATE TABLE Utilisateur(
     Prenom varchar(30) NOT NULL,
     Nom_famille varchar(30) NOT NULL,
     Pseudo varchar(30) NOT NULL,
-    Date_naissance DATE NOT NULL,
+    Date_naissance varchar(10) NOT NULL,
     Email varchar(30) NOT NULL,
     Mot_de_passe varchar(30) NOT NULL,
-    --Photo_profil bytea,
+    Photo_profil varchar,
     ID_Type int NOT NULL,
     FOREIGN KEY (ID_Type) REFERENCES TypeUtilisateur(ID_Type)
 );
@@ -44,8 +44,7 @@ CREATE TABLE Groupe(
 CREATE TABLE Album(
     ID_Album integer PRIMARY KEY,
     Titre varchar(30) NOT NULL,
-    DateSortie date NOT NULL,
-    Duree time
+    DateSortie varchar(10) NOT NULL
 );
 
 CREATE TABLE Morceau(
@@ -64,7 +63,7 @@ CREATE TABLE Playlist(
 CREATE TABLE Concert(
     ID_Concert integer PRIMARY KEY,
     Nom varchar(30) NOT NULL,
-    Dates DATE NOT NULL,
+    DateConcert varchar(10) NOT NULL,
     Prix integer,
     Nbr_places integer NOT NULL,
     Cause varchar(30),
@@ -94,7 +93,7 @@ CREATE TABLE Avis(
     ID_Avis integer PRIMARY KEY,
     Note integer,
     Commentaire varchar(1200),
-    DatePost Date NOT NULL,
+    DatePost varchar(10) NOT NULL,
     ID_Utilisateur integer NOT NULL,
     ID_Concert integer,
     ID_Groupe integer,
@@ -139,20 +138,14 @@ CREATE TABLE Organisateur(
     FOREIGN KEY (ID_Concert) REFERENCES Concert(ID_Concert)
 );
 
-CREATE TABLE Participant(
+CREATE TABLE ParticipantInteresse(
     ID_Utilisateur integer NOT NULL,
     ID_Concert integer NOT NULL,
+    PI varchar(1),
     UNIQUE(ID_Utilisateur, ID_Concert),
     FOREIGN KEY (ID_Utilisateur) REFERENCES Utilisateur(ID_Utilisateur),  
-    FOREIGN KEY (ID_Concert) REFERENCES Concert(ID_Concert)
-);
-
-CREATE TABLE Interesse(
-    ID_Utilisateur integer NOT NULL,
-    ID_Concert integer NOT NULL,
-    UNIQUE(ID_Utilisateur, ID_Concert),
-    FOREIGN KEY (ID_Utilisateur) REFERENCES Utilisateur(ID_Utilisateur),  
-    FOREIGN KEY (ID_Concert) REFERENCES Concert(ID_Concert)
+    FOREIGN KEY (ID_Concert) REFERENCES Concert(ID_Concert),
+    CHECK (PI LIKE 'P' OR PI LIKE 'I')
 );
 
 CREATE TABLE ContenuPlaylist(
