@@ -14,8 +14,8 @@ CREATE TABLE Utilisateur(
     Prenom varchar(30) NOT NULL,
     Nom_famille varchar(30) NOT NULL,
     Pseudo varchar(30) NOT NULL,
-    Date_naissance varchar(10) NOT NULL,
-    Email varchar(30) NOT NULL,
+    Date_naissance varchar(10),
+    Email varchar(100) NOT NULL,
     Mot_de_passe varchar(30) NOT NULL,
     Photo_profil varchar,
     ID_Type int NOT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE Album(
 CREATE TABLE Morceau(
     ID_Morceau integer PRIMARY KEY,
     Titre varchar(30) NOT NULL,
-    Duree time
+    Duree integer -- in seconds
 );
 
 CREATE TABLE Playlist(
@@ -107,9 +107,9 @@ CREATE TABLE Avis(
     FOREIGN KEY (ID_LineUp) REFERENCES LineUp(ID_LineUp),  
     FOREIGN KEY (ID_Playlist) REFERENCES Playlist(ID_Playlist),
     FOREIGN KEY (ID_Lieu) REFERENCES Lieu(ID_Lieu),
-    CHECK (ID_Concert IS NOT NULL OR ID_Groupe IS NOT NULL OR 
-    ID_Playlist IS NOT NULL OR ID_LineUp IS NOT NULL 
-    OR ID_Lieu IS NOT NULL),
+    CHECK (ID_Utilisateur IS NOT NULL OR ID_Concert IS NOT NULL OR 
+    ID_Groupe IS NOT NULL OR ID_LineUp IS NOT NULL 
+    OR ID_Lieu IS NOT NULL OR ID_Playlist IS NOT NULL),
     CHECK (Note IS NOT NULL OR Commentaire IS NOT NULL),
     CHECK (Note BETWEEN 0 AND 5)
 );
@@ -156,6 +156,7 @@ CREATE TABLE ContenuPlaylist(
     FOREIGN KEY (ID_Playlist) REFERENCES Playlist(ID_Playlist),  
     FOREIGN KEY (ID_Morceau) REFERENCES Morceau(ID_Morceau),
     CHECK(Position < 21)
+    --needs a check for limited amount of playlists per user
 );
 
 CREATE TABLE ContenuAlbum(
