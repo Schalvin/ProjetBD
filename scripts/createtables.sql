@@ -1,12 +1,15 @@
-DROP TABLE TypeUtilisateur, Utilisateurs, Lieu, Genre, Groupe, Album, Morceau, Playlist, Concert, LineUp, 
-Tag, Avis, Amis, Follows CASCADE;
+DROP TABLE IF EXISTS TypeUtilisateur, Utilisateur, 
+Lieu, Genre, Groupe, Album, Morceau, Playlist, Concert, LineUp, 
+Tag, Avis, Amis, Follows, Organisateur, Participant, Interesse, ContenuAlbum, ContenuPlaylist,
+ArtisteAlbum, GroupeTag, MorceauTag, PlaylistTag, ConcertTag, LieuTag,
+GroupeGenre, MorceauGenre CASCADE;
 
 CREATE TABLE TypeUtilisateur(
     ID_Type integer PRIMARY KEY,
     Libelle varchar(30)
 );
 
-CREATE TABLE Utilisateurs(
+CREATE TABLE Utilisateur(
     ID_Utilisateur integer PRIMARY KEY,
     Prenom varchar(30) NOT NULL,
     Nom_famille varchar(30) NOT NULL,
@@ -46,7 +49,7 @@ CREATE TABLE Album(
 );
 
 CREATE TABLE Morceau(
-    ID_Album integer PRIMARY KEY,
+    ID_Morceau integer PRIMARY KEY,
     Titre varchar(30) NOT NULL,
     Duree time
 );
@@ -55,7 +58,7 @@ CREATE TABLE Playlist(
     ID_Playlist integer PRIMARY KEY,
     Nom varchar(30) NOT NULL,
     ID_Utilisateur integer,
-    FOREIGN KEY (ID_Utilisateur) REFERENCES Utilisateurs(ID_Utilisateur)
+    FOREIGN KEY (ID_Utilisateur) REFERENCES Utilisateur(ID_Utilisateur)
 );
 
 CREATE TABLE Concert(
@@ -78,8 +81,8 @@ CREATE TABLE LineUp(
     ID_Groupe integer,
     Position integer,
     UNIQUE(ID_Concert, ID_Groupe, Position),
-    FOREIGN KEY ID_Concert REFERENCES Concert(ID_Concert),  
-    FOREIGN KEY ID_Groupe REFERENCES Groupe(ID_Groupe)
+    FOREIGN KEY (ID_Concert) REFERENCES Concert(ID_Concert),  
+    FOREIGN KEY (ID_Groupe) REFERENCES Groupe(ID_Groupe)
 );
 
 CREATE TABLE Tag(
@@ -95,20 +98,20 @@ CREATE TABLE Avis(
     ID_Utilisateur integer NOT NULL,
     ID_Concert integer,
     ID_Groupe integer,
-    ID_LineUp integer
+    ID_LineUp integer,
     ID_Playlist integer,
-    ID_Lieu integer
+    ID_Lieu integer,
 
-    FOREIGN KEY ID_Utilisateur REFERENCES Utilisateur(ID_Utilisateur) 
-    FOREIGN KEY ID_Concert REFERENCES Concert(ID_Concert),  
-    FOREIGN KEY ID_Groupe REFERENCES Groupe(ID_Groupe),
-    FOREIGN KEY ID_LineUp REFERENCES LineUp(ID_LineUp),  
-    FOREIGN KEY ID_Playlist REFERENCES Playlist(ID_Playlist),
-    FOREIGN KEY ID_Lieu REFERENCES Lieu(ID_Lieu)
+    FOREIGN KEY (ID_Utilisateur) REFERENCES Utilisateur(ID_Utilisateur), 
+    FOREIGN KEY (ID_Concert) REFERENCES Concert(ID_Concert),  
+    FOREIGN KEY (ID_Groupe) REFERENCES Groupe(ID_Groupe),
+    FOREIGN KEY (ID_LineUp) REFERENCES LineUp(ID_LineUp),  
+    FOREIGN KEY (ID_Playlist) REFERENCES Playlist(ID_Playlist),
+    FOREIGN KEY (ID_Lieu) REFERENCES Lieu(ID_Lieu),
     CHECK (ID_Concert IS NOT NULL OR ID_Groupe IS NOT NULL OR 
     ID_Playlist IS NOT NULL OR ID_LineUp IS NOT NULL 
-    OR ID_Lieu IS NOT NULL)
-    CHECK (Note IS NOT NULL OR Commentaire IS NOT NULL)
+    OR ID_Lieu IS NOT NULL),
+    CHECK (Note IS NOT NULL OR Commentaire IS NOT NULL),
     CHECK (Note BETWEEN 0 AND 5)
 );
 
@@ -127,3 +130,112 @@ CREATE TABLE Follows(
     FOREIGN KEY (ID_Suiveur) REFERENCES Utilisateur(ID_Utilisateur),  
     FOREIGN KEY (ID_Suivi) REFERENCES Utilisateur(ID_Utilisateur)
 );
+
+CREATE TABLE Organisateur(
+    ID_Utilisateur integer NOT NULL,
+    ID_Concert integer NOT NULL,
+    UNIQUE(ID_Utilisateur, ID_Concert),
+    FOREIGN KEY (ID_Utilisateur) REFERENCES Utilisateur(ID_Utilisateur),  
+    FOREIGN KEY (ID_Concert) REFERENCES Concert(ID_Concert)
+);
+
+CREATE TABLE Participant(
+    ID_Utilisateur integer NOT NULL,
+    ID_Concert integer NOT NULL,
+    UNIQUE(ID_Utilisateur, ID_Concert),
+    FOREIGN KEY (ID_Utilisateur) REFERENCES Utilisateur(ID_Utilisateur),  
+    FOREIGN KEY (ID_Concert) REFERENCES Concert(ID_Concert)
+);
+
+CREATE TABLE Interesse(
+    ID_Utilisateur integer NOT NULL,
+    ID_Concert integer NOT NULL,
+    UNIQUE(ID_Utilisateur, ID_Concert),
+    FOREIGN KEY (ID_Utilisateur) REFERENCES Utilisateur(ID_Utilisateur),  
+    FOREIGN KEY (ID_Concert) REFERENCES Concert(ID_Concert)
+);
+
+CREATE TABLE ContenuPlaylist(
+    ID_Playlist integer NOT NULL,
+    ID_Morceau integer NOT NULL,
+    Position integer NOT NULL,
+    UNIQUE(ID_Playlist, ID_Morceau, Position),
+    FOREIGN KEY (ID_Playlist) REFERENCES Playlist(ID_Playlist),  
+    FOREIGN KEY (ID_Morceau) REFERENCES Morceau(ID_Morceau),
+    CHECK(Position < 21)
+);
+
+CREATE TABLE ContenuAlbum(
+    ID_Album integer NOT NULL,
+    ID_Morceau integer NOT NULL,
+    Position integer NOT NULL,
+    UNIQUE(ID_Album, ID_Morceau, Position),
+    FOREIGN KEY (ID_Album) REFERENCES Album(ID_Album),  
+    FOREIGN KEY (ID_Morceau) REFERENCES Morceau(ID_Morceau)
+);
+
+CREATE TABLE ArtisteAlbum(
+    ID_Album integer NOT NULL,
+    ID_Groupe integer NOT NULL,
+    Position integer NOT NULL,
+    UNIQUE(ID_Album, ID_Groupe, Position),
+    FOREIGN KEY (ID_Album) REFERENCES Album(ID_Album),  
+    FOREIGN KEY (ID_Groupe) REFERENCES Groupe(ID_Groupe)
+);
+
+CREATE TABLE GroupeTag(
+    ID_Groupe integer NOT NULL,
+    ID_Tag integer NOT NULL,
+    UNIQUE(ID_Tag, ID_Groupe),
+    FOREIGN KEY (ID_Tag) REFERENCES Tag(ID_Tag),  
+    FOREIGN KEY (ID_Groupe) REFERENCES Groupe(ID_Groupe)
+);
+
+CREATE TABLE MorceauTag(
+    ID_Morceau integer NOT NULL,
+    ID_Tag integer NOT NULL,
+    UNIQUE(ID_Tag, ID_Morceau),
+    FOREIGN KEY (ID_Tag) REFERENCES Tag(ID_Tag),  
+    FOREIGN KEY (ID_Morceau) REFERENCES Morceau(ID_Morceau)
+);
+
+CREATE TABLE PlaylistTag(
+    ID_Playlist integer NOT NULL,
+    ID_Tag integer NOT NULL,
+    UNIQUE(ID_Tag, ID_Playlist),
+    FOREIGN KEY (ID_Tag) REFERENCES Tag(ID_Tag),  
+    FOREIGN KEY (ID_Playlist) REFERENCES Playlist(ID_Playlist)
+);
+
+CREATE TABLE ConcertTag(
+    ID_Concert integer NOT NULL,
+    ID_Tag integer NOT NULL,
+    UNIQUE(ID_Tag, ID_Concert),
+    FOREIGN KEY (ID_Tag) REFERENCES Tag(ID_Tag),  
+    FOREIGN KEY (ID_Concert) REFERENCES Concert(ID_Concert)
+);
+
+CREATE TABLE LieuTag(
+    ID_Lieu integer NOT NULL,
+    ID_Tag integer NOT NULL,
+    UNIQUE(ID_Lieu, ID_Tag),
+    FOREIGN KEY (ID_Lieu) REFERENCES Lieu(ID_Lieu),  
+    FOREIGN KEY (ID_Tag) REFERENCES Tag(ID_Tag)
+);
+
+CREATE TABLE MorceauGenre(
+    ID_Morceau integer NOT NULL,
+    ID_Genre integer NOT NULL,
+    UNIQUE(ID_Morceau, ID_Genre),
+    FOREIGN KEY (ID_Morceau) REFERENCES Morceau(ID_Morceau),  
+    FOREIGN KEY (ID_Genre) REFERENCES Genre(ID_Genre)
+);
+
+CREATE TABLE GroupeGenre(
+    ID_Groupe integer NOT NULL,
+    ID_Genre integer NOT NULL,
+    UNIQUE(ID_Groupe, ID_Genre),
+    FOREIGN KEY (ID_Groupe) REFERENCES Groupe(ID_Groupe),  
+    FOREIGN KEY (ID_Genre) REFERENCES Genre(ID_Genre)
+);
+
