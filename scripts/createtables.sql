@@ -24,7 +24,7 @@ CREATE TABLE Utilisateur(
 
 CREATE TABLE Lieu (
     ID_Lieu integer PRIMARY KEY,
-    Nom varchar(30) NOT NULL,
+    NomL varchar(30) NOT NULL,
     Adresse varchar(100),
     Ville varchar(30) NOT NULL,
     Pays varchar(30) NOT NULL
@@ -37,32 +37,32 @@ CREATE TABLE Genre(
 
 CREATE TABLE Groupe(
     ID_Groupe integer PRIMARY KEY,
-    Nom varchar(30) NOT NULL,
+    NomG varchar(30) NOT NULL,
     Descript varchar(200)
 );
 
 CREATE TABLE Album(
     ID_Album integer PRIMARY KEY,
-    Titre varchar(30) NOT NULL,
+    TitreA varchar(30) NOT NULL,
     DateSortie varchar(10) NOT NULL
 );
 
 CREATE TABLE Morceau(
     ID_Morceau integer PRIMARY KEY,
-    Titre varchar(30) NOT NULL,
+    TitreM varchar(30) NOT NULL,
     Duree integer -- in seconds
 );
 
 CREATE TABLE Playlist(
     ID_Playlist integer PRIMARY KEY,
-    Nom varchar(30) NOT NULL,
+    NomP varchar(30) NOT NULL,
     ID_Utilisateur integer,
     FOREIGN KEY (ID_Utilisateur) REFERENCES Utilisateur(ID_Utilisateur)
 );
 
 CREATE TABLE Concert(
     ID_Concert integer PRIMARY KEY,
-    Nom varchar(30) NOT NULL,
+    NomC varchar(30) NOT NULL,
     DateConcert varchar(10) NOT NULL,
     Prix integer,
     Nbr_places integer NOT NULL,
@@ -98,18 +98,18 @@ CREATE TABLE Avis(
     ID_Concert integer,
     ID_Groupe integer,
     ID_LineUp integer,
-    ID_Playlist integer,
+    ID_Morceau integer,
     ID_Lieu integer,
 
     FOREIGN KEY (ID_Utilisateur) REFERENCES Utilisateur(ID_Utilisateur), 
     FOREIGN KEY (ID_Concert) REFERENCES Concert(ID_Concert),  
     FOREIGN KEY (ID_Groupe) REFERENCES Groupe(ID_Groupe),
     FOREIGN KEY (ID_LineUp) REFERENCES LineUp(ID_LineUp),  
-    FOREIGN KEY (ID_Playlist) REFERENCES Playlist(ID_Playlist),
+    FOREIGN KEY (ID_Morceau) REFERENCES Morceau(ID_Morceau),
     FOREIGN KEY (ID_Lieu) REFERENCES Lieu(ID_Lieu),
     CHECK (ID_Utilisateur IS NOT NULL OR ID_Concert IS NOT NULL OR 
     ID_Groupe IS NOT NULL OR ID_LineUp IS NOT NULL 
-    OR ID_Lieu IS NOT NULL OR ID_Playlist IS NOT NULL),
+    OR ID_Lieu IS NOT NULL OR ID_Morceau IS NOT NULL),
     CHECK (Note IS NOT NULL OR Commentaire IS NOT NULL),
     CHECK (Note BETWEEN 0 AND 5)
 );

@@ -13,27 +13,27 @@ FROM '/Users/Siann/Desktop/bur/bureau/etudes/M1S1/BD/ProjetBD/data/Utilisateur.c
 DELIMITER ','
 CSV HEADER;
 
-COPY Lieu(ID_Lieu, Nom, Adresse, Ville, Pays)
+COPY Lieu(ID_Lieu, NomL, Adresse, Ville, Pays)
 FROM '/Users/Siann/Desktop/bur/bureau/etudes/M1S1/BD/ProjetBD/data/Lieu.csv'
 DELIMITER ','
 CSV HEADER;
 
-COPY Concert(ID_Concert, Nom, DateConcert, Prix, Nbr_places, Cause, BesoinVolontaires, EspacesExterieurs, Enfants, ID_Lieu)
+COPY Concert(ID_Concert, NomC, DateConcert, Prix, Nbr_places, Cause, BesoinVolontaires, EspacesExterieurs, Enfants, ID_Lieu)
 FROM '/Users/Siann/Desktop/bur/bureau/etudes/M1S1/BD/ProjetBD/data/Concert.csv'
 DELIMITER ','
 CSV HEADER;
 
-COPY Groupe(ID_Groupe,Nom,Descript)
+COPY Groupe(ID_Groupe,NomG,Descript)
 FROM '/Users/Siann/Desktop/bur/bureau/etudes/M1S1/BD/ProjetBD/data/Groupe.csv'
 DELIMITER ','
 CSV HEADER;
 
-COPY Album(ID_Album, Titre, DateSortie)
+COPY Album(ID_Album, TitreA, DateSortie)
 FROM '/Users/Siann/Desktop/bur/bureau/etudes/M1S1/BD/ProjetBD/data/Album.csv'
 DELIMITER ','
 CSV HEADER;
 
-COPY Playlist(ID_Playlist, Nom, ID_Utilisateur)
+COPY Playlist(ID_Playlist, NomP, ID_Utilisateur)
 FROM '/Users/Siann/Desktop/bur/bureau/etudes/M1S1/BD/ProjetBD/data/Playlist.csv'
 DELIMITER ','
 CSV HEADER;
@@ -48,13 +48,13 @@ FROM '/Users/Siann/Desktop/bur/bureau/etudes/M1S1/BD/ProjetBD/data/Amis.csv'
 DELIMITER ','
 CSV HEADER;
 
-COPY Avis(ID_Avis, Note, Commentaire, DatePost, ID_Utilisateur, ID_Concert, ID_Groupe, ID_LineUp, ID_Playlist, ID_Lieu)
-FROM '/Users/Siann/Desktop/bur/bureau/etudes/M1S1/BD/ProjetBD/data/Avis.csv'
+COPY Morceau(ID_Morceau, TitreM, Duree)
+FROM '/Users/Siann/Desktop/bur/bureau/etudes/M1S1/BD/ProjetBD/data/Morceau.csv'
 DELIMITER ','
 CSV HEADER;
 
-COPY Morceau(ID_Morceau, Titre, Duree)
-FROM '/Users/Siann/Desktop/bur/bureau/etudes/M1S1/BD/ProjetBD/data/Morceau.csv'
+COPY Avis(ID_Avis, Note, Commentaire, DatePost, ID_Utilisateur, ID_Concert, ID_Groupe, ID_LineUp, ID_Morceau, ID_Lieu)
+FROM '/Users/Siann/Desktop/bur/bureau/etudes/M1S1/BD/ProjetBD/data/Avis.csv'
 DELIMITER ','
 CSV HEADER;
 
