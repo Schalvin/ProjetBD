@@ -50,29 +50,80 @@ FROM (
     SELECT ID_Genre, COUNT(ID_Morceau)
     FROM MorceauGenre
     GROUP BY ID_Genre
-    HAVING ID_Genre is not null) NATURAL JOIN Genre
+    HAVING COUNT(ID_Morceau)>4) NATURAL JOIN Genre
 ORDER BY COUNT DESC, Genre ASC;
 
 -- 8. Durée d'un Album (somme des durées des morceaux de cet album) de la même manière avec playlist
 
+Select TitreA, Sum/60 as Dureeminute
+From Album NATURAL JOIN (
+    Select ID_Album, Sum(Duree)
+    FROM ContenuAlbum NATURAL JOIN Morceau
+    GROUP BY ID_Album
+    HAVING Sum(Duree)/60 > 100
+)
+ORDER BY Dureeminute DESC;
+
 -- 9. La moyenne de la durée d'une Playlist (deux agregats)
+
+Select AVG(Dureeminute)
+From(
+    Select NomP, Sum/60 as Dureeminute
+    From Playlist NATURAL JOIN (
+        Select ID_Playlist, Sum(Duree)
+        FROM ContenuPlaylist NATURAL JOIN Morceau
+        GROUP BY ID_Playlist
+    ));
 
 -- 10. Tous les morceaux avec leur note s'ils en ont (outer join)
 
--- 11. Toutes les chansons dont la note est superieure a la moyenne (condition de totalite sous requete correllee)
+Select TitreM, Note
+From Morceau NATURAL LEFT JOIN Avis
+WHERE TitreM LIKE 'Whistl%';
 
-select département, nom, prénom
-from employe E where salaire >= ALL (
-select salaire
-from employe
-where department = E.departement);
 
--- 12. Toutes les chansons dont la note est superieure a la moyenne (avec agrégation)
+-- 11. Tous les lieux dans lesquels ont eu / vont avoir lieu plus d'un concert (condition de totalite sous requete correllee)
 
-select département, nom, prénom
-from employe E where salaire >= ALL (
-select salaire
-from employe
-where department = E.departement);
+SELECT *
+FROM Lieu
+WHERE (
+    SELECT COUNT(ID_Concert)
+    FROM Concert
+    WHERE Concert.ID_Lieu = Lieu.ID_Lieu
+) > 1;
+
+-- 12. La même requête (totalité avec agrégation)
+
+SELECT NomL, Adresse, Ville, Pays
+FROM Lieu NATURAL JOIN Concert
+GROUP BY ID_Lieu
+HAVING COUNT(ID_Concert) > 1;
 
 -- 13. Les villes dans lesquelles 
+-- les amis d'un utilisateur sont allés voir des concerts ce mois-ci
+
+SELECT Distinct Ville
+FROM Lieu NATURAL JOIN Concert NATURAL JOIN ParticipantInteresse
+WHERE PI = 'P' AND EXTRACT(MONTH FROM to_date(DateConcert, 'DD/MM/YYYY')) = EXTRACT(MONTH FROM CURRENT_DATE) 
+AND EXTRACT(YEAR FROM to_date(DateConcert, 'DD/MM/YYYY')) = EXTRACT(YEAR FROM CURRENT_DATE) 
+AND ID_Utilisateur IN (
+    Select ID_Utilisateur2 as ID_Utilisateur
+    FROM Amis
+    WHERE ID_Utilisateur1 = 66
+);
+
+-- 14. Top 10 des meilleurs morceaux sortis ce mois ci (view)
+DROP VIEW Top10M;
+CREATE VIEW Top10M AS 
+(SELECT TitreM, Duree
+FROM Morceau NATURAL JOIN Avis JOIN ContenuAlbum ON (Morceau.ID_Morceau = ContenuAlbum.ID_Morceau)
+JOIN Album ON (ContenuAlbum.ID_Album = Album.ID_Album)
+WHERE EXTRACT(MONTH FROM to_date(DateSortie, 'DD/MM/YYYY')) = EXTRACT(MONTH FROM CURRENT_DATE) 
+AND EXTRACT(YEAR FROM to_date(DateSortie, 'DD/MM/YYYY')) = EXTRACT(YEAR FROM CURRENT_DATE)
+ORDER BY Note Desc
+LIMIT 10
+);
+
+-- 15. Photos de profils des utilisateurs (requête 1)
+
+

@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS TypeUtilisateur, Utilisateur,
 Lieu, Genre, Groupe, Album, Morceau, Playlist, Concert, LineUp, 
 Tag, Avis, Amis, Follows, Organisateur, ParticipantInteresse, ContenuAlbum, ContenuPlaylist,
 ArtisteAlbum, GroupeTag, MorceauTag, PlaylistTag, ConcertTag, LieuTag,
-GroupeGenre, MorceauGenre CASCADE;
+GroupeGenre, MorceauGenre, Archive CASCADE;
 
 CREATE TABLE TypeUtilisateur(
     ID_Type integer PRIMARY KEY,
@@ -95,7 +95,7 @@ CREATE TABLE Avis(
     Commentaire varchar(1200),
     DatePost varchar(10) NOT NULL,
     ID_Utilisateur integer NOT NULL,
-    ID_Concert integer,
+    ID_Archive integer,
     ID_Groupe integer,
     ID_LineUp integer,
     ID_Morceau integer,
@@ -232,4 +232,13 @@ CREATE TABLE GroupeGenre(
     FOREIGN KEY (ID_Groupe) REFERENCES Groupe(ID_Groupe),  
     FOREIGN KEY (ID_Genre) REFERENCES Genre(ID_Genre)
 );
+
+CREATE TABLE Archive(
+    ID_Archive integer PRIMARY KEY,
+    ID_Concert integer NOT NULL,
+    Photos varchar
+    FOREIGN KEY (ID_Concert) REFERENCES Concert(ID_Concert)
+);
+
+-- Fonctions pour permettre l'archivage des concerts.
 
