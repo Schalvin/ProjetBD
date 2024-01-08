@@ -1,16 +1,16 @@
--- 1. Prochains concerts d'un groupe :
+-- 1. Prochains concerts d'un groupe (3 tables):
 Select Distinct DateConcert
 From LineUp NATURAL JOIN Groupe
     JOIN Concert ON (Concert.ID_Concert = LineUp.ID_Concert)
     WHERE NomG = 'Midnight Serenade';
 
--- 2. Les amis des amis d'un utilisateur :
+-- 2. Les amis des amis d'un utilisateur (jointure reflexive):
 Select Prenom, Nom_famille
 From Amis AS Amis1 JOIN Amis AS Amis2 ON (Amis1.ID_Utilisateur2 = Amis2.ID_Utilisateur1)
     JOIN Utilisateur ON (Amis2.ID_Utilisateur2 = Utilisateur.ID_Utilisateur)
     WHERE Amis1.ID_Utilisateur1 = 39;
 
--- 3. Les Playlist vides :
+-- 3. Les Playlist vides (sous requête corrélée):
 Select NomP
 From Playlist
 WHERE not exists(
@@ -18,7 +18,7 @@ WHERE not exists(
     From ContenuPlaylist
     Where Playlist.ID_Playlist = ContenuPlaylist.ID_Playlist);
 
--- 4. Les avis sur les groupes contenant un mot precis :
+-- 4. Les avis sur les groupes contenant un mot precis (sous requête From):
 Select NomG, Note, Commentaire, Pseudo
 From (
     Select *
@@ -27,14 +27,14 @@ From (
     NATURAL JOIN Groupe
 WHERE Commentaire LIKE '%puissant%';
 
--- 5. Les organisateurs de concerts suivis par d'autres utilisateurs.
+-- 5. Les organisateurs de concerts suivis par d'autres utilisateurs (Sous requête where).
 Select Pseudo, Libelle as TypeU
 From Utilisateur NATURAL JOIN TypeUtilisateur
 WHERE ID_Utilisateur in (
     Select ID_Suivi
     From Follows JOIN Organisateur on (ID_Suivi = ID_Utilisateur));
 
--- 6. La note moyenne d'un morceau de musique.
+-- 6. La note moyenne des morceau de musique.
 Select TitreM, AVG
 FROM (
     SELECT ID_Morceau, AVG(Note)
@@ -44,7 +44,7 @@ FROM (
     HAVING ID_Morceau is not null) NATURAL JOIN Morceau
     ;
 
--- 7. Le nombre de morceau ayant un certain genre
+-- 7. Le nombre de morceau ayant un certain genre (Groupby, having 1)
 Select Genre, COUNT
 FROM (
     SELECT ID_Genre, COUNT(ID_Morceau)
@@ -53,7 +53,7 @@ FROM (
     HAVING COUNT(ID_Morceau)>4) NATURAL JOIN Genre
 ORDER BY COUNT DESC, Genre ASC;
 
--- 8. Durée d'un Album (somme des durées des morceaux de cet album) de la même manière avec playlist
+-- 8. Durée d'un Album (somme des durées des morceaux de cet album) de la même manière avec playlist (group by having 2)
 
 Select TitreA, Sum/60 as Dureeminute
 From Album NATURAL JOIN (
@@ -124,6 +124,14 @@ ORDER BY Note Desc
 LIMIT 10
 );
 
--- 15. Photos de profils des utilisateurs (requête 1)
+-- 15 et 16. Requête renvoyant des resultats différents quand les tables contiennent des nulls
+Select NomC, Ville, DateConcert
+From Concert NATURAL JOIN Lieu;
 
+Select NomC, NomL, DateConcert
+From Concert NATURAL LEFT JOIN Lieu;
+
+-- 17 Récursive : Date des
+
+-- 18 : 
 
