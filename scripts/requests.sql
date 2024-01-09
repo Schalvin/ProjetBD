@@ -133,5 +133,11 @@ From Concert NATURAL LEFT JOIN Lieu;
 
 -- 17 Récursive : Date des
 
--- 18 : 
+-- 18 : Classement des albums sortis ce mois
+
+SELECT TitreA
+FROM Album NATURAL JOIN Avis
+WHERE EXTRACT(MONTH FROM to_date(DateSortie, 'DD/MM/YYYY')) = EXTRACT(MONTH FROM CURRENT_DATE) 
+AND EXTRACT(YEAR FROM to_date(DateSortie, 'DD/MM/YYYY')) = EXTRACT(YEAR FROM CURRENT_DATE)
+ORDER BY Note Desc;
 
