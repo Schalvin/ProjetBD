@@ -131,9 +131,7 @@ From Concert NATURAL JOIN Lieu;
 Select NomC, NomL, DateConcert
 From Concert NATURAL LEFT JOIN Lieu;
 
--- 17 Récursive : Date des
-
--- 18 : Classement des albums sortis ce mois
+-- 17. : Classement des albums sortis ce mois
 
 SELECT TitreA
 FROM Album NATURAL JOIN Avis
@@ -141,3 +139,20 @@ WHERE EXTRACT(MONTH FROM to_date(DateSortie, 'DD/MM/YYYY')) = EXTRACT(MONTH FROM
 AND EXTRACT(YEAR FROM to_date(DateSortie, 'DD/MM/YYYY')) = EXTRACT(YEAR FROM CURRENT_DATE)
 ORDER BY Note Desc;
 
+-- 18. Tous les concerts qui ont comme tag 'punk'
+
+Select NomC
+From Concert NATURAL JOIN ConcertTag NATURAL JOIN Tag
+WHERE Libelle = 'punk';
+
+-- 19. Tous les concerts ayant lieu dans une même ville
+
+SELECT NomC
+FROM Concert NATURAL JOIN Lieu
+WHERE Ville = 'Brooklyn';
+
+-- 20. Le nombre de chaque utilisateur
+
+SELECT Libelle, COUNT(Libelle)
+FROM Utilisateur NATURAL JOIN TypeUtilisateur
+GROUP BY Libelle;

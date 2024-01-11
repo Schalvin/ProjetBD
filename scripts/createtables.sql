@@ -1,3 +1,4 @@
+SET datestyle
 DROP TABLE IF EXISTS TypeUtilisateur, Utilisateur, 
 Lieu, Genre, Groupe, Album, Morceau, Playlist, Concert, LineUp, 
 Tag, Avis, Amis, Follows, Organisateur, ParticipantInteresse, ContenuAlbum, ContenuPlaylist,
@@ -58,7 +59,8 @@ CREATE TABLE Playlist(
     NomP varchar(30) NOT NULL,
     ID_Utilisateur integer,
     FOREIGN KEY (ID_Utilisateur) REFERENCES Utilisateur(ID_Utilisateur)
-);
+    CHECK(COUNT(ID_Playlist)<10)
+    );
 
 CREATE TABLE Concert(
     ID_Concert integer PRIMARY KEY,
@@ -156,7 +158,6 @@ CREATE TABLE ContenuPlaylist(
     FOREIGN KEY (ID_Playlist) REFERENCES Playlist(ID_Playlist),  
     FOREIGN KEY (ID_Morceau) REFERENCES Morceau(ID_Morceau),
     CHECK(Position < 21)
-    --needs a check for limited amount of playlists per user
 );
 
 CREATE TABLE ContenuAlbum(
@@ -237,7 +238,10 @@ CREATE TABLE Archive(
     ID_Archive integer PRIMARY KEY,
     ID_Concert integer NOT NULL,
     Photos varchar
+    Participants integer NOT NULL
+    ID_Lieu integer
     FOREIGN KEY (ID_Concert) REFERENCES Concert(ID_Concert)
+    FOREIGN KEY (ID_Lieu) REFERENCES Lieu(ID_Lieu)
 );
 
 -- Fonctions pour permettre l'archivage des concerts.
