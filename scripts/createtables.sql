@@ -1,4 +1,4 @@
-SET datestyle
+SET datestyle = 'ISO, DMY';
 DROP TABLE IF EXISTS TypeUtilisateur, Utilisateur, 
 Lieu, Genre, Groupe, Album, Morceau, Playlist, Concert, LineUp, 
 Tag, Avis, Amis, Follows, Organisateur, ParticipantInteresse, ContenuAlbum, ContenuPlaylist,
@@ -59,7 +59,7 @@ CREATE TABLE Playlist(
     NomP varchar(30) NOT NULL,
     ID_Utilisateur integer,
     FOREIGN KEY (ID_Utilisateur) REFERENCES Utilisateur(ID_Utilisateur)
-    CHECK(COUNT(ID_Playlist)<10)
+    -- CHECK(COUNT(ID_Utilisateur)<10)
     );
 
 CREATE TABLE Concert(
@@ -91,13 +91,23 @@ CREATE TABLE Tag(
     Libelle varchar(30) NOT NULL
 );
 
+CREATE TABLE Archive(
+    ID_Archive integer PRIMARY KEY,
+    ID_Concert integer NOT NULL,
+    Photos varchar,
+    Participants integer NOT NULL,
+    ID_Lieu integer,
+    FOREIGN KEY (ID_Concert) REFERENCES Concert(ID_Concert),
+    FOREIGN KEY (ID_Lieu) REFERENCES Lieu(ID_Lieu)
+);
+
 CREATE TABLE Avis(
     ID_Avis integer PRIMARY KEY,
     Note integer,
     Commentaire varchar(1200),
     DatePost varchar(10) NOT NULL,
     ID_Utilisateur integer NOT NULL,
-    ID_Archive integer,
+    ID_Concert integer,
     ID_Groupe integer,
     ID_LineUp integer,
     ID_Morceau integer,
@@ -232,16 +242,6 @@ CREATE TABLE GroupeGenre(
     UNIQUE(ID_Groupe, ID_Genre),
     FOREIGN KEY (ID_Groupe) REFERENCES Groupe(ID_Groupe),  
     FOREIGN KEY (ID_Genre) REFERENCES Genre(ID_Genre)
-);
-
-CREATE TABLE Archive(
-    ID_Archive integer PRIMARY KEY,
-    ID_Concert integer NOT NULL,
-    Photos varchar
-    Participants integer NOT NULL
-    ID_Lieu integer
-    FOREIGN KEY (ID_Concert) REFERENCES Concert(ID_Concert)
-    FOREIGN KEY (ID_Lieu) REFERENCES Lieu(ID_Lieu)
 );
 
 -- Fonctions pour permettre l'archivage des concerts.

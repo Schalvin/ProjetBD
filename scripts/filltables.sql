@@ -1,7 +1,7 @@
 TRUNCATE TABLE TypeUtilisateur, Utilisateur, Lieu, Genre, Groupe, Album, Morceau, Playlist, Concert, LineUp, 
 Tag, Avis, Amis, Follows, Organisateur, ParticipantInteresse, ContenuAlbum, ContenuPlaylist,
-ArtisteAlbum, GroupeTag, MorceauTag, PlaylistTag, ConcertTag, LieuTag,
-GroupeGenre, MorceauGenre;
+ArtisteAlbum, Archive, GroupeTag, MorceauTag, PlaylistTag, ConcertTag, LieuTag,
+GroupeGenre, MorceauGenre CASCADE;
 
 COPY TypeUtilisateur(ID_Type, Libelle)
 FROM '/Users/Siann/Desktop/bur/bureau/etudes/M1S1/BD/ProjetBD/data/TypeUtilisateur.csv'
